@@ -19,6 +19,6 @@ spec:
           name: rcon-port
         env:
         - name: EULA
-          value: true
+          value: "true"
         - name: ENABLE_RCON
-          value: true
+          value: "true"
