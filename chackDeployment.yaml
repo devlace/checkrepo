@@ -1,0 +1,24 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: chack-minecraft
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: chack-minecraft
+    spec:
+      containers:
+      - name: chack-minecraft
+        image: openhack/minecraft-server:1.0
+        ports:
+        - containerPort: 25565
+          name: minecraft-port
+        - containerPort: 25575
+          name: rcon-port
+        env:
+        - name: EULA
+          value: true
+        - name: ENABLE_RCON
+          value: true

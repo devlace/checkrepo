@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Service
+metadata:
+  name: chack-mcs-service
+spec:
+  ports:
+    - name: default
+      port: 25565
+      targetPort: 25565
+    - name: rcon
+      port: 25575
+      targetPort: 25575
+  selector:
+    app: chack-minecraft
+  type: LoadBalancer
