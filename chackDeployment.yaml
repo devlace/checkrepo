@@ -12,6 +12,9 @@ spec:
       containers:
       - name: chack-minecraft
         image: openhack/minecraft-server:1.0
+        volumeMounts:
+        - mountPath: "/data"
+          name: aks-minecraft-storvol
         ports:
         - containerPort: 25565
           name: minecraft-port
@@ -22,6 +25,14 @@ spec:
           value: "true"
         - name: ENABLE_RCON
           value: "true"
+        resources:
+          limits:
+            - memory: "7Gi"
+              cpu: "4"
+      volumes:
+      - name: aks-minecraft-storvol
+        persistentVolumeClaim:
+          claimName: aks-minecraft-files
 ---
 apiVersion: v1
 kind: Service
@@ -38,3 +49,25 @@ spec:
   selector:
     app: chack-minecraft
   type: LoadBalancer
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: azurefile
+provisioner: kubernetes.io/azure-file
+parameters:
+  skuName: Standard_LRS
+  location: westeurope
+  storageAccount: aksminecraftstorage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aks-minecraft-files
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: azurefile
+  resources:
+    requests:
+      storage: 5Gi
